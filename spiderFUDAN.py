@@ -1,0 +1,112 @@
+'''
+Author: Derry
+Date: 2022-05-26 17:24:57
+LastEditors: Derry
+Email: drlv@mail.ustc.edu.cn
+LastEditTime: 2022-06-08 12:30:11
+Description: None
+'''
+import datetime
+import time
+
+import xlwt
+from selenium import webdriver  # 用来驱动浏览器的
+from selenium.webdriver import ActionChains  # 破解滑动验证码的时候用的 可以拖动图片
+from selenium.webdriver.common.by import By  # 按照什么方式查找，By.ID,By.CSS_SELECTOR
+from selenium.webdriver.common.keys import Keys  # 键盘按键操作
+from selenium.webdriver.support import \
+    expected_conditions as EC  # 和下面WebDriverWait一起用的
+from selenium.webdriver.support.wait import WebDriverWait
+
+workbook = xlwt.Workbook(encoding='utf-8')
+main_sheet = workbook.add_sheet("统计")
+line = 0
+print("start")
+arr = ["人民日报", "人民日报海外版", "新华社", "中央人民广播电台", "中央电视台", "求是杂志", "解放军报", "光明日报", "经济日报", "中国日报",
+       "科技日报", "人民政协报", "中国纪检监察报", "中国新闻网", "学习时报", "工人日报", "中国青年报", "中国妇女报", "农民日报", "法制日报"]
+
+current_time = datetime.datetime.now()
+year = current_time.year
+month = current_time.month
+
+
+def handle_page(news_list, worksheet, name):
+    print("now seeking " + name)
+    print("length of news list is"+str(len(news_list)))
+    global line
+    for k in range(len(news_list)):
+        item = news_list[k]
+        print("***********"+item.text+"***********")
+        publish_time = item.find_elements(
+            by=By.CLASS_NAME, value="item_metas")[0].text
+        publish_from = item.find_elements(
+            by=By.CLASS_NAME, value="item_metas")[1].text
+        title = item.find_elements(by=By.CLASS_NAME, value="item_title")[0]
+        link = title.find_elements(by=By.TAG_NAME, value="a")
+        print("publish time="+publish_time)
+        print("出自="+publish_from)
+        print("链接："+link[0].text + "  "+link[0].get_attribute("href"))
+        if str(year) in publish_time and str(month) in publish_time:
+            hwai = name+"海外版"
+            client = name + "客户端"
+            if name in publish_from and hwai not in publish_from and client not in publish_from:
+                if "客户端" not in title.text and "网" not in title.text:
+                    worksheet.write(line, 0, link[0].text)
+                    worksheet.write(line, 1, link[0].get_attribute("href"))
+                    line = line+1
+        else:
+            return False
+    return True
+
+
+for i in range(len(arr)):
+    main_sheet.write(0, i, arr[i])
+    name = arr[i]
+    driver = webdriver.Chrome(executable_path="./chromedriver")
+    try:
+        driver.get('https://news.fudan.edu.cn/')
+        print(driver.current_url)
+        worksheet = workbook.add_sheet(name)
+        line = 0
+        times = 0
+        wait = WebDriverWait(driver, 10)
+        input_tag = wait.until(
+            EC.presence_of_element_located((By.NAME, "keyword")))
+        input_tag.clear()
+        # 3,在搜索框在输入要搜索的内容
+        input_tag.send_keys(name)
+
+        # 4,按键盘回车键
+        input_tag.send_keys(Keys.ENTER)
+        time.sleep(6)
+        windows = driver.window_handles
+        driver.switch_to.window(windows[1])
+        # print(driver.current_url)
+        news_list = driver.find_elements_by_class_name("result_item")
+        print(len(news_list))
+        # news_list = driver.find_element(by=By.CLASS_NAME, value="result_item")
+        # print(news_list.text)
+        print(news_list[0].text)
+        while handle_page(news_list, worksheet, name) is not False:
+            print("************NEW TURN STARTS**********")
+            pages = driver.find_elements(
+                by=By.CLASS_NAME, value="search_pages")[0]
+            next = pages.find_elements(by=By.CLASS_NAME, value="next")
+            if next != None:
+                next[0].click()
+                time.sleep(4)
+                news_list = driver.find_elements(
+                    by=By.CLASS_NAME, value="result_item")
+            else:
+                break
+        driver.quit()
+    except:
+        pass
+    finally:
+        driver.quit()
+        pass
+
+current_time = datetime.datetime.now()
+month_time = current_time.strftime('%Y%m')
+filename = f"复旦大学{month_time}各刊物情况.xls"
+workbook.save(filename)
