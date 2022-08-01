@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 16:06:00
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-06-09 18:19:04
+LastEditTime: 2022-07-01 20:22:04
 Description: None
 '''
 import re
@@ -68,8 +68,10 @@ class USTC(NewsInfo):
 
                 year = int(news_data['time'][:4])
                 month = int(news_data['time'][5:7])
-                if year not in order_years or month not in order_months:
+                if year not in order_years or month < min(order_months):
                     return data
+                elif month > max(order_months):
+                    continue
 
                 print(news_data)
                 data.append(news_data)
@@ -77,6 +79,6 @@ class USTC(NewsInfo):
 
 if __name__ == "__main__":
     ustc = USTC()
-    data = ustc.get_news(order_years=[2022], order_months=[3, 4, 5, 6])
+    data = ustc.get_news(order_years=[2022], order_months=[6])
     ustc.classify_data(data)
     ustc.save_news(ustc.outfile_name)

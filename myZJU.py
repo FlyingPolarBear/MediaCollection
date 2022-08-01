@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 13:07:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-06-09 18:19:23
+LastEditTime: 2022-07-01 20:22:52
 Description: None
 '''
 from NewsInfo import NewsInfo
@@ -53,8 +53,10 @@ class ZJU(NewsInfo):
 
                     year = int(news_data['time'][:4])
                     month = int(news_data['time'][5:7])
-                    if year not in order_years or month not in order_months:
+                    if year not in order_years or month < min(order_months):
                         return data
+                    elif month > max(order_months):
+                        continue
 
                     print(news_data)
                     data.append(news_data)

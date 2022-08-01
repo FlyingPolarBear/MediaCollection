@@ -55,8 +55,10 @@ class TJU(NewsInfo):
 
                 year = int(news_data['time'][:4])
                 month = int(news_data['time'][5:7])
-                if year not in order_years or month not in order_months:
+                if year not in order_years or month < min(order_months):
                     return data
+                elif month > max(order_months):
+                    continue
 
                 if news_data['title'] not in title_list:
                     print(news_data)

@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 13:07:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-06-08 21:03:24
+LastEditTime: 2022-08-01 15:32:59
 Description: None
 '''
 from NewsInfo import NewsInfo
@@ -51,8 +51,10 @@ class Fudan(NewsInfo):
 
                     year = int(news_data['time'][:4])
                     month = int(news_data['time'][5:7])
-                    if year not in order_years or month not in order_months:
+                    if year not in order_years or month < min(order_months):
                         return data
+                    elif month > max(order_months):
+                        continue
 
                     print(news_data)
                     data.append(news_data)
@@ -60,6 +62,6 @@ class Fudan(NewsInfo):
 
 if __name__ == "__main__":
     fudan = Fudan()
-    data = fudan.get_news(order_years=[2022], order_months=[3, 4, 5, 6])
+    data = fudan.get_news(order_years=[2022], order_months=[7])
     fudan.classify_data(data)
     fudan.save_news(fudan.outfile_name)

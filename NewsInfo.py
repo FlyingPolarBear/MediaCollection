@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 15:42:40
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-06-09 18:18:34
+LastEditTime: 2022-06-19 15:34:26
 Description: None
 '''
 import xlwt
@@ -15,10 +15,15 @@ class NewsInfo:
                            "科技日报", "人民政协报", "中国纪检监察报", "中国新闻网", "学习时报", "工人日报", "中国青年报", "中国妇女报", "农民日报", "法制日报", "其它"]
 
     def _get_out_name(self, univ_name, year, month):
-        if isinstance(month, list):
-            month_start = month[0] if month[0] > 10 else '0'+str(month[0])
-            month_end = month[-1] if month[-1] > 10 else '0'+str(month[-1])
+        if len(month) > 1:
+            month_start = min(month)
+            month_end = max(month)
+            month_start = month_start if month_start > 10 else '0'+str(month_start)
+            month_end = month_end if month_end > 10 else '0'+str(month_end)
             time_str = f'{year}{month_start}-{year}{month_end}'
+        else:
+            month = month[0] if month[0] > 10 else '0'+str(month[0])
+            time_str = f'{year}{month}'
         return f"data/{univ_name}{time_str}各刊物情况.xls"
 
     def classify_data(self, data):
