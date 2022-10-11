@@ -1,6 +1,8 @@
 # tmp files
 data/
+selenium_spides/
 chormedriver
+nohup.out
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

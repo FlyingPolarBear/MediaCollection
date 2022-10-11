@@ -3,8 +3,8 @@ Author: Derry
 Date: 2022-06-08 16:06:00
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-07-01 20:22:04
-Description: None
+LastEditTime: 2022-10-11 12:50:45
+Description: 中国科大新闻网爬虫
 '''
 import re
 

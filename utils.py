@@ -3,24 +3,22 @@ Author: Derry
 Date: 2022-05-26 21:42:07
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-08-01 15:18:52
+LastEditTime: 2022-10-11 12:51:20
 Description: None
 '''
 
-import re
-import requests
-from bs4 import BeautifulSoup
-import retry
 import json
+import re
 
-from sympy import content
+import requests
+import retry
+from bs4 import BeautifulSoup
 
 
 @retry.retry(tries=3, delay=1)
 def request_url(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'}
-
     response = requests.get(url, headers=headers)
     response.encoding = response.apparent_encoding
     if response.status_code == 200:

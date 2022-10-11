@@ -3,8 +3,8 @@ Author: Derry
 Date: 2022-06-08 16:51:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-07-01 20:20:43
-Description: None
+LastEditTime: 2022-10-11 12:43:07
+Description: 南京大学新闻网爬虫
 '''
 from NewsInfo import NewsInfo
 from utils import post_data
@@ -44,6 +44,6 @@ class NJU(NewsInfo):
 
 if __name__ == "__main__":
     nju = NJU()
-    data = nju.get_news(order_years=[2022], order_months=[6])
+    data = nju.get_news(order_years=[2022], order_months=[8])
     nju.classify_data(data)
     nju.save_news(nju.outfile_name)

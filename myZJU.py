@@ -3,8 +3,8 @@ Author: Derry
 Date: 2022-06-08 13:07:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-07-01 20:22:52
-Description: None
+LastEditTime: 2022-10-11 12:47:27
+Description: 浙江大学新闻网爬虫
 '''
 from NewsInfo import NewsInfo
 from utils import request_url
@@ -64,6 +64,6 @@ class ZJU(NewsInfo):
 
 if __name__ == "__main__":
     zju = ZJU()
-    data = zju.get_news(order_years=[2022], order_months=[3, 4, 5, 6])
+    data = zju.get_news(order_years=[2022], order_months=[8])
     zju.classify_data(data)
     zju.save_news(zju.outfile_name)

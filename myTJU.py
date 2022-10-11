@@ -3,8 +3,8 @@ Author: Derry
 Date: 2022-06-08 17:19:54
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-06-09 18:19:59
-Description: None
+LastEditTime: 2022-10-11 12:42:54
+Description: 天津大学新闻网爬虫
 '''
 from NewsInfo import NewsInfo
 from utils import request_url
@@ -20,7 +20,7 @@ class TJU(NewsInfo):
         if i == 1:
             return "http://news.tju.edu.cn/mtbd.htm"
         else:
-            return f"http://news.tju.edu.cn/mtbd/{650-i}.htm"
+            return f"http://news.tju.edu.cn/mtbd/{700-i}.htm"
 
     def _time_parser(self, news_time):
         news_time = news_time.text.strip()
@@ -68,6 +68,6 @@ class TJU(NewsInfo):
 
 if __name__ == "__main__":
     tju = TJU()
-    data = tju.get_news(order_years=[2022], order_months=[3, 4, 5, 6])
+    data = tju.get_news(order_years=[2022], order_months=[9])
     tju.classify_data(data)
     tju.save_news(tju.outfile_name)
