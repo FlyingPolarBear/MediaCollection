@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 13:07:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-10-11 12:47:27
+LastEditTime: 2022-11-02 11:35:37
 Description: 浙江大学新闻网爬虫
 '''
 from NewsInfo import NewsInfo

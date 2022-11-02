@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-08-07 22:45:57
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-10-07 20:08:22
+LastEditTime: 2022-10-16 14:51:22
 Description: None
 '''
 import datetime
@@ -62,15 +62,24 @@ class Cell:
         return f"https://www.sciencedirect.com/journal/molecular-cell/articles-in-press?page={i}"
 
     def load_main_webpage(self, url, file_path="tmp/articles-in-press"):
-        if os.path.exists(file_path):
-            os.remove(file_path)
-        os.system(f'wget -U "Mozilla/5.0" -O {file_path} "{self.base_url}"')
-        with open(file_path, "r") as f:
-            for line in f:
-                if line.startswith("</style>"):
-                    html = line.lstrip("</style>").rstrip("</div>\n")
-                    break
-        soup = BeautifulSoup(html, 'lxml')
+        def load_webpage():
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            os.system(
+                f'wget -U "Mozilla/5.0" -O {file_path} "{self.base_url}"')
+            with open(file_path, "r") as f:
+                for line in f:
+                    if line.startswith("</style>"):
+                        html = line.lstrip("</style>").rstrip("</div>\n")
+                        break
+            return html
+        while True:
+            try:
+                html = load_webpage()
+                soup = BeautifulSoup(html, 'lxml')
+                break
+            except:
+                pass
         return soup
 
     def extract_date_info(self, raw_date):
@@ -160,7 +169,8 @@ class Cell:
         with open("tmp/res.html", "w") as f:
             f.write(html)
         sender = EmailSender(msg_to="411473510@qq.com")
-        sender.send(content=html, subject=f"Molecular Cell Weekly Update ({date_interval})")
+        sender.send(
+            content=html, subject=f"Molecular Cell Weekly Update ({date_interval})")
 
 
 class BaiduTranslate:
@@ -225,7 +235,8 @@ def CellWeekly(immed=True):
         cell = Cell()
         paper_list = cell.get_info()
         cell.send_info(paper_list)
-    next_week_time = current_time + datetime.timedelta(days=(4-current_time.weekday())%7)
+    next_week_time = current_time + \
+        datetime.timedelta(days=(4-current_time.weekday()) % 7)
     next_week_time = next_week_time.replace(hour=16, minute=0, second=0)
     if next_week_time < current_time:
         next_week_time += datetime.timedelta(days=7)
@@ -242,6 +253,7 @@ def CellWeekly(immed=True):
         sleep_time = (next_week_time - current_time).total_seconds()
         print(f"{current_time.strftime('%Y-%m-%d %H:%M:%S')}\t下次唤醒时间：{next_week_time.strftime('%Y-%m-%d %H:%M:%S')}")
         time.sleep(sleep_time)
+
 
 if __name__ == "__main__":
     CellWeekly(immed=False)

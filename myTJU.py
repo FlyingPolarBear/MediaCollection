@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 17:19:54
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-10-11 12:42:54
+LastEditTime: 2022-11-02 12:05:13
 Description: 天津大学新闻网爬虫
 '''
 from NewsInfo import NewsInfo
@@ -15,12 +15,13 @@ class TJU(NewsInfo):
         super().__init__()
         self.univ_name = '天津大学'
         self.base_url = "http://news.tju.edu.cn/"
+        self.max_num = 708
 
     def _nextpage(self, i):
         if i == 1:
             return "http://news.tju.edu.cn/mtbd.htm"
         else:
-            return f"http://news.tju.edu.cn/mtbd/{700-i}.htm"
+            return f"http://news.tju.edu.cn/mtbd/{self.max_num-i}.htm"
 
     def _time_parser(self, news_time):
         news_time = news_time.text.strip()
@@ -32,6 +33,16 @@ class TJU(NewsInfo):
     def _media_parser(self, title):
         return title.split('：')[0]
 
+    def _get_next_pagenum(self, soup):
+        a_list = soup.find_all("a")
+        for a in a_list:
+            if a.text == '下页':
+                nextpage_part_url = a.get('href')
+                break
+        next_num = int(nextpage_part_url.split('.')[0][5:])
+        return next_num
+
+
     def get_news(self, order_years=[2022], order_months=[3, 4, 5, 6]):
         self.outfile_name = self._get_out_name(self.univ_name, order_years[0], order_months)
         data = []
@@ -40,6 +51,8 @@ class TJU(NewsInfo):
         while True:
             i += 1
             soup = request_url(self._nextpage(i))
+            if i == 1:
+                self.max_num = self._get_next_pagenum(soup)+2
             news_list = soup.find_all('h4')
             time_list = soup.find_all('h5')
 
@@ -68,6 +81,6 @@ class TJU(NewsInfo):
 
 if __name__ == "__main__":
     tju = TJU()
-    data = tju.get_news(order_years=[2022], order_months=[9])
+    data = tju.get_news(order_years=[2022], order_months=[10])
     tju.classify_data(data)
     tju.save_news(tju.outfile_name)
