@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 15:42:40
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-10-11 12:51:05
+LastEditTime: 2022-11-02 12:23:18
 Description: 新闻网爬虫基类
 '''
 import xlwt
@@ -22,7 +22,7 @@ class NewsInfo:
             month_end = month_end if month_end > 10 else '0'+str(month_end)
             time_str = f'{year}{month_start}-{year}{month_end}'
         else:
-            month = month[0] if month[0] > 10 else '0'+str(month[0])
+            month = month[0] if month[0] >= 10 else '0'+str(month[0])
             time_str = f'{year}{month}'
         return f"data/{univ_name}{time_str}各刊物情况.xls"
 

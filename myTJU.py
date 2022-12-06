@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 17:19:54
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-11-02 12:05:13
+LastEditTime: 2022-12-01 15:43:15
 Description: 天津大学新闻网爬虫
 '''
 from NewsInfo import NewsInfo
@@ -15,13 +15,16 @@ class TJU(NewsInfo):
         super().__init__()
         self.univ_name = '天津大学'
         self.base_url = "http://news.tju.edu.cn/"
-        self.max_num = 708
+        # self.max_num = 715 #总页数+1
 
     def _nextpage(self, i):
         if i == 1:
             return "http://news.tju.edu.cn/mtbd.htm"
         else:
             return f"http://news.tju.edu.cn/mtbd/{self.max_num-i}.htm"
+
+    def _get_max_page(self):
+        pass
 
     def _time_parser(self, news_time):
         news_time = news_time.text.strip()
@@ -42,9 +45,9 @@ class TJU(NewsInfo):
         next_num = int(nextpage_part_url.split('.')[0][5:])
         return next_num
 
-
     def get_news(self, order_years=[2022], order_months=[3, 4, 5, 6]):
-        self.outfile_name = self._get_out_name(self.univ_name, order_years[0], order_months)
+        self.outfile_name = self._get_out_name(
+            self.univ_name, order_years[0], order_months)
         data = []
         i = 0
         title_list = []
@@ -81,6 +84,6 @@ class TJU(NewsInfo):
 
 if __name__ == "__main__":
     tju = TJU()
-    data = tju.get_news(order_years=[2022], order_months=[10])
+    data = tju.get_news(order_years=[2022], order_months=[11])
     tju.classify_data(data)
     tju.save_news(tju.outfile_name)

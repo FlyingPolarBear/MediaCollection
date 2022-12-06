@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 16:51:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-11-02 12:07:40
+LastEditTime: 2022-12-06 17:02:31
 Description: 南京大学新闻网爬虫
 '''
 from NewsInfo import NewsInfo
@@ -16,7 +16,7 @@ class NJU(NewsInfo):
         self.univ_name = '南京大学'
         self.base_url = "http://www.news.nju.edu.cn"
 
-        self.infoid_list = open('nju_infoid_list.txt', 'r').read().split('\n')
+        self.infoid_list = open('model/nju_infoid_list.txt', 'r').read().split('\n')
 
     def get_news(self, order_years=[2022], order_months=[3, 4, 5, 6]):
         self.outfile_name = self._get_out_name(

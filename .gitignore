@@ -1,6 +1,6 @@
 # tmp files
-data/
 selenium_spides/
+catboost_info/
 chormedriver
 nohup.out
 wget-log
