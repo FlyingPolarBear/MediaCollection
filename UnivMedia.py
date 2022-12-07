@@ -3,17 +3,18 @@ Author: Derry
 Date: 2022-05-26 21:38:58
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-11-02 12:17:28
+LastEditTime: 2022-12-07 22:17:16
 Description: None
 '''
 import datetime
 import time
 
-from myFudan import Fudan
-from myNJU import NJU
-from myTJU import TJU
-from myUSTC import USTC
-from myZJU import ZJU
+from src.myFudan import Fudan
+from src.myNJU import NJU
+from src.myTJU import TJU
+from src.myUSTC import USTC
+from src.myZJU import ZJU
+
 
 def timed_trigger_main():
     now = datetime.datetime.now()
@@ -26,7 +27,8 @@ def timed_trigger_main():
         for UNIV in (Fudan, NJU, ZJU, USTC, TJU):
             univ = UNIV()
             print(univ.univ_name)
-            data = univ.get_news(order_years=[2022], order_months=[now.month-1])
+            data = univ.get_news(
+                order_years=[2022], order_months=[now.month-1])
             univ.classify_data(data)
             univ.save_news(univ.outfile_name)
         awake_time = datetime.datetime(
@@ -34,14 +36,18 @@ def timed_trigger_main():
         print(f"awake_time: {awake_time}")
         time.sleep((awake_time - now).total_seconds())
 
-def main():
-    now = datetime.datetime.now()
+
+def main(order_months=None):
+    if order_months is None:
+        now = datetime.datetime.now()
+        order_months = [now.month-1]
     for UNIV in (Fudan, NJU, ZJU, USTC, TJU):
-            univ = UNIV()
-            print(univ.univ_name)
-            data = univ.get_news(order_years=[2022], order_months=[now.month-1])
-            univ.classify_data(data)
-            univ.save_news(univ.outfile_name)
+        univ = UNIV()
+        print(univ.univ_name)
+        data = univ.get_news(order_years=[2022], order_months=order_months)
+        univ.classify_data(data)
+        univ.save_news(univ.outfile_name)
+
 
 if __name__ == "__main__":
-    main()
+    main([12])

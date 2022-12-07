@@ -1,9 +1,6 @@
 # tmp files
 selenium_spides/
-catboost_info/
-chormedriver
-nohup.out
-wget-log
+out/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
