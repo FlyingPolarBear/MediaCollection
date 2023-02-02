@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 15:42:40
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-12-07 22:17:45
+LastEditTime: 2023-01-01 19:08:51
 Description: 新闻网爬虫基类
 '''
 import xlwt

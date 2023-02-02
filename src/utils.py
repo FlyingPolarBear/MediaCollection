@@ -3,10 +3,12 @@ Author: Derry
 Date: 2022-05-26 21:42:07
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-12-07 21:58:00
+LastEditTime: 2023-01-01 20:14:02
 Description: None
 '''
 
+import zipfile
+import shutil
 import json
 import os
 import re
@@ -17,11 +19,11 @@ from bs4 import BeautifulSoup
 
 
 @retry.retry(tries=3, delay=1)
-def request_url(url):
+def request_url(url,encoding = None):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'}
     response = requests.get(url, headers=headers)
-    response.encoding = response.apparent_encoding
+    response.encoding = response.apparent_encoding if encoding is None else encoding
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'lxml')
     return soup
@@ -53,6 +55,16 @@ def post_data(url, data):
             res_data = json.loads(text)
     return res_data
 
+
 def mkdir(path):
     if not os.path.exists(path):
         os.mkdir(path)
+
+
+def zip_dir(dir_path, zip_file_name):
+    zip_file = zipfile.ZipFile(zip_file_name, 'w', zipfile.ZIP_DEFLATED)
+    for root, dirs, files in os.walk(dir_path):
+        for file in files:
+            zip_file.write(os.path.join(root, file),
+                           os.path.relpath(os.path.join(root, file), os.path.join(dir_path, '..')))
+    zip_file.close()
