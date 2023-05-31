@@ -77,7 +77,7 @@ class TJU(NewsInfo):
                     continue
 
                 if news_data['title'] not in title_list:
-                    print(news_data)
+                    self.print_info(news_data)
                     data.append(news_data)
                     title_list.append(news_data['title'])
 

@@ -58,7 +58,7 @@ class ZJU(NewsInfo):
                     elif month > max(order_months):
                         continue
 
-                    print(news_data)
+                    self.print_info(news_data)
                     data.append(news_data)
 
 

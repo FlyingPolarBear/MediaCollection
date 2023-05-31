@@ -3,9 +3,11 @@ Author: Derry
 Date: 2022-06-08 16:51:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-12-07 22:38:22
+LastEditTime: 2023-05-31 12:56:37
 Description: 南京大学新闻网爬虫
 '''
+from rich import print as rprint
+
 from src.NewsInfo import NewsInfo
 from src.utils import post_data
 
@@ -38,7 +40,7 @@ class NJU(NewsInfo):
                     elif month > max(order_months):
                         continue
 
-                    print(news_data)
+                    self.print_info(news_data)
                     data.append(news_data)
 
 

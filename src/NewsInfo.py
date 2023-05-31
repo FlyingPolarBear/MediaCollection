@@ -3,17 +3,26 @@ Author: Derry
 Date: 2022-06-08 15:42:40
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-01-01 19:08:51
+LastEditTime: 2023-05-31 13:27:09
 Description: 新闻网爬虫基类
 '''
+import json
+
 import xlwt
+from rich import print as rprint
+
 from src.utils import mkdir
 
+# 新华社：包含新华社客户端和新华社报纸的新闻，不包含新华网的新闻
+# 中央广播电视总台：包括中央电视台和中央人民广播电台，主要是包括各类CCTV频道报道，一般以“央视新闻”、“新闻联播”等作为标签
+# 中国青年报：只统计报纸的，不包括客户端
 
 class NewsInfo:
     def __init__(self):
-        self.media_list = ["人民日报海外版", "人民日报客户端", "人民日报", "新华社", "中央人民广播电台", "中央电视台", "求是", "解放军报", "光明日报", "经济日报", "中国日报",
-                           "科技日报", "人民政协报", "中国纪检监察报", "中国新闻网", "学习时报", "工人日报", "中国青年报", "中国妇女报", "农民日报", "法制日报", "其它"]
+        with open("media_list.json", "r", encoding="utf-8") as f:
+            self.outmedia_to_media = json.load(f)
+        self.media_list = list(self.outmedia_to_media.values())
+        self.media_list = sorted(set(self.media_list), key=self.media_list.index)
 
     def _get_out_name(self, univ_name, year, month):
         if len(month) > 1:
@@ -30,18 +39,18 @@ class NewsInfo:
         out_name = f"{out_dir}/{univ_name}{time_str}各刊物情况.xls"
         return out_name
 
+    def print_info(self,info:dict):
+        rprint(f"[bold]{info['title']}[/bold]")
+        rprint(f"[cyan]{info['time']}[/cyan] [yellow]{info['media']}[/yellow] [italic]{info['url']}[/italic]\n")
+
     def classify_data(self, data):
         self.media_dict = {media: [] for media in self.media_list}
         for d in data:  # for each news
             flag = False
-            if '新闻联播' in d['media']:
-                d['media'] = '中央电视台'
-                self.media_dict['中央电视台'].append(d)
-                continue
-            for media in self.media_list[:-1]:
+            for media in self.outmedia_to_media.keys():
                 if media in d['media']:
-                    d['media'] = media
-                    self.media_dict[media].append(d)
+                    d['media'] = self.outmedia_to_media[media]
+                    self.media_dict[self.outmedia_to_media[media]].append(d)
                     flag = True
                     break
             if not flag:
@@ -64,3 +73,6 @@ class NewsInfo:
                 ws.write(i+1, 1, d['title'])
                 ws.write(i+1, 2, d['url'])
         wb.save(outfile_name)
+
+if __name__ == "__main__":
+    NewsInfo()

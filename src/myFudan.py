@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 13:07:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-02-01 23:52:17
+LastEditTime: 2023-05-29 20:03:54
 Description: 复旦大学新闻网爬虫
 '''
 from src.NewsInfo import NewsInfo
@@ -56,7 +56,7 @@ class Fudan(NewsInfo):
                     elif month > max(order_months):
                         continue
 
-                    print(news_data)
+                    self.print_info(news_data)
                     data.append(news_data)
 
 
