@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-05-26 21:38:58
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-05-31 13:21:22
+LastEditTime: 2023-06-02 13:48:26
 Description: 主函数
 '''
 import datetime
@@ -12,12 +12,7 @@ import time
 from rich import print as rprint
 from rich.console import Console
 
-from src.myFudan import Fudan
-from src.myNJU import NJU
-from src.myTJU import TJU
-from src.myUSTC import USTC
-from src.myZJU import ZJU
-from src.utils import zip_dir
+from university import Fudan, NJU, ZJU, USTC, TJU, zip_dir
 
 
 def timed_trigger_main():
@@ -42,6 +37,11 @@ def timed_trigger_main():
 
 
 def main(order_months=None):
+    """
+    ! Attention: 南京大学每月需要更新infoids
+    ! Attention: 中国科大需要注意max_page的变更
+    ? Caution: 天津大学需要注意max_page的变更
+    """
     if order_months is None:
         now = datetime.datetime.now()
         order_months = [now.month-1]
@@ -49,6 +49,7 @@ def main(order_months=None):
         univ = UNIV()
         console = Console()
         console.rule(f"\n[bold red]👇👇👇 {' '.join(univ.univ_name)} 👇👇👇[/bold red]\n")
+        rprint(f"📕 [bold red]{univ.univ_name}[/bold red] 新闻网：[italic blue]{univ.base_url}[/italic blue]\n")
         data = univ.get_news(order_years=[2023], order_months=order_months)
         univ.classify_data(data)
         univ.save_news(univ.outfile_name)

@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 15:42:40
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-05-31 13:27:09
+LastEditTime: 2023-06-01 11:06:23
 Description: 新闻网爬虫基类
 '''
 import json
@@ -11,7 +11,7 @@ import json
 import xlwt
 from rich import print as rprint
 
-from src.utils import mkdir
+from university.utils import mkdir
 
 # 新华社：包含新华社客户端和新华社报纸的新闻，不包含新华网的新闻
 # 中央广播电视总台：包括中央电视台和中央人民广播电台，主要是包括各类CCTV频道报道，一般以“央视新闻”、“新闻联播”等作为标签
@@ -19,6 +19,8 @@ from src.utils import mkdir
 
 class NewsInfo:
     def __init__(self):
+        self.univ_name = 'xx大学'
+        self.base_url = "https://www.xxx.edu.cn"
         with open("media_list.json", "r", encoding="utf-8") as f:
             self.outmedia_to_media = json.load(f)
         self.media_list = list(self.outmedia_to_media.values())
@@ -57,6 +59,7 @@ class NewsInfo:
                 self.media_dict['其它'].append(d)
 
     def save_news(self, outfile_name='各刊物情况.xlsx'):
+        num = 0
         wb = xlwt.Workbook()
         ws_all = wb.add_sheet('统计')
         ws_all.write(0, 0, '媒体')
@@ -64,6 +67,7 @@ class NewsInfo:
         for i, media in enumerate(self.media_list):
             ws_all.write(i+1, 0, media)
             ws_all.write(i+1, 1, len(self.media_dict[media]))
+            num+=len(self.media_dict[media])
             ws = wb.add_sheet(media)
             ws.write(0, 0, '时间')
             ws.write(0, 1, '标题')
@@ -73,6 +77,11 @@ class NewsInfo:
                 ws.write(i+1, 1, d['title'])
                 ws.write(i+1, 2, d['url'])
         wb.save(outfile_name)
+        if len(self.media_dict) == 0:
+            rprint(f"❌ [bold yellow]警告：[/bold red] {self.univ_name}未找到任何新闻！\n")
+        else:
+            rprint(f"✅ [bold red]{self.univ_name}[/bold red] [bold green]成功[/bold green] 找到 {num} 条新闻！\n")
+        
 
 if __name__ == "__main__":
     NewsInfo()

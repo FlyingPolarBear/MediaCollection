@@ -8,8 +8,8 @@ Description: 南京大学新闻网爬虫
 '''
 from rich import print as rprint
 
-from src.NewsInfo import NewsInfo
-from src.utils import post_data
+from university.NewsInfo import NewsInfo
+from university.utils import post_data
 
 
 class NJU(NewsInfo):

@@ -6,8 +6,8 @@ Email: drlv@mail.ustc.edu.cn
 LastEditTime: 2023-05-29 20:03:54
 Description: 复旦大学新闻网爬虫
 '''
-from src.NewsInfo import NewsInfo
-from src.utils import request_url
+from university.NewsInfo import NewsInfo
+from university.utils import request_url
 
 
 class Fudan(NewsInfo):

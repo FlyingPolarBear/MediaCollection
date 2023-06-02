@@ -6,8 +6,8 @@ Email: drlv@mail.ustc.edu.cn
 LastEditTime: 2022-12-01 15:43:15
 Description: 天津大学新闻网爬虫
 '''
-from src.NewsInfo import NewsInfo
-from src.utils import request_url
+from university.NewsInfo import NewsInfo
+from university.utils import request_url
 
 
 class TJU(NewsInfo):

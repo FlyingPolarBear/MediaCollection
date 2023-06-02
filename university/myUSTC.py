@@ -3,13 +3,13 @@ Author: Derry
 Date: 2022-06-08 16:06:00
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-05-29 21:02:36
+LastEditTime: 2023-06-02 13:30:22
 Description: 中国科大新闻网爬虫
 '''
 import re
 
-from src.NewsInfo import NewsInfo
-from src.utils import request_url
+from university.NewsInfo import NewsInfo
+from university.utils import request_url
 
 
 class USTC(NewsInfo):
@@ -17,12 +17,13 @@ class USTC(NewsInfo):
         super().__init__()
         self.univ_name = '中国科大'
         self.base_url = "http://news.ustc.edu.cn/"
+        self.max_num = 438  # 总页数+1
 
     def _nextpage(self, i): # ! 注意这里的i的变化
         if i == 1:
             return "http://news.ustc.edu.cn/mtgz.htm"
         else:
-            return f"http://news.ustc.edu.cn/mtgz/{470-i}.htm"
+            return f"http://news.ustc.edu.cn/mtgz/{self.max_num-i}.htm"
 
     def _time_parser(self, news_time):
         news_time = news_time.strip()
@@ -36,20 +37,21 @@ class USTC(NewsInfo):
 
     def _media_parser(self, title):
         pattern1 = re.compile(r'【(.*?)】')
-        media1 = re.findall(pattern1, title)
         pattern2 = re.compile(r'《(.*?)》')
-        media2 = re.findall(pattern2, title)
         pattern3 = re.compile(r'】(.*?)｜')
+        pattern4 = re.compile(r'】(.*?)丨')
+        media1 = re.findall(pattern1, title)
+        media2 = re.findall(pattern2, title)
         media3 = re.findall(pattern3, title)
+        media4 = re.findall(pattern4, title)
         if len(media1) and media1[0] != "牢记嘱托建新功":
             return media1[0]
-        elif len(media3):
-            return media3[0]
-        elif len(media2):
-            return media2[0]
         else:
+            for media in [media2, media3, media4]:
+                if len(media):
+                    return media[0]
             return ''
-        
+
     def get_news(self, order_years=[2023], order_months=[5]):
         self.outfile_name = self._get_out_name(
             self.univ_name, order_years[0], order_months)
@@ -86,6 +88,6 @@ class USTC(NewsInfo):
 
 if __name__ == "__main__":
     ustc = USTC()
-    data = ustc.get_news(order_years=[2023], order_months=[4])
+    data = ustc.get_news(order_years=[2023], order_months=[5])
     ustc.classify_data(data)
     ustc.save_news(ustc.outfile_name)
