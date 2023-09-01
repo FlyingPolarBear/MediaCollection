@@ -3,11 +3,12 @@ Author: Derry
 Date: 2022-06-08 17:19:54
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2022-12-01 15:43:15
+LastEditTime: 2023-07-03 15:03:24
 Description: 天津大学新闻网爬虫
 '''
 from university.NewsInfo import NewsInfo
 from university.utils import request_url
+import re
 
 
 class TJU(NewsInfo):
@@ -34,7 +35,19 @@ class TJU(NewsInfo):
         return year+'-'+month+'-'+day
 
     def _media_parser(self, title):
-        return title.split('：')[0]
+        title = title.replace("【天开园】", "")
+        title = title.replace("【主题教育】", "")
+        if "：" in title:
+            media = title.split('：')[0]
+        elif "【" in title and "】" in title:
+            pattern = r'【(.*?)】'
+            media = re.findall(pattern, title)[0]
+        elif ":" in title:
+            media = title.split(':')[0]
+        else:
+            media = title
+        return media
+
 
     def _get_next_pagenum(self, soup):
         a_list = soup.find_all("a")

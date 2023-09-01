@@ -59,7 +59,7 @@ def post_data(url, data):
 def mkdir(path):
     if not os.path.exists(path):
         os.mkdir(path)
-
+from rich import print as rprint
 
 def zip_dir(dir_path, zip_file_name):
     zip_file = zipfile.ZipFile(zip_file_name, 'w', zipfile.ZIP_DEFLATED)
@@ -68,3 +68,4 @@ def zip_dir(dir_path, zip_file_name):
             zip_file.write(os.path.join(root, file),
                            os.path.relpath(os.path.join(root, file), os.path.join(dir_path, '..')))
     zip_file.close()
+    rprint(f"📚 Zipped [italic blue]{dir_path}[/italic blue] to [italic blue]{zip_file_name}[/italic blue]")

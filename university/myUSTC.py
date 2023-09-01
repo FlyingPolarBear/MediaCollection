@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-06-08 16:06:00
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-06-02 13:30:22
+LastEditTime: 2023-08-01 11:55:52
 Description: 中国科大新闻网爬虫
 '''
 import re
@@ -13,17 +13,18 @@ from university.utils import request_url
 
 
 class USTC(NewsInfo):
-    def __init__(self) -> None:
+    def __init__(self,max_num=442) -> None:
         super().__init__()
         self.univ_name = '中国科大'
         self.base_url = "http://news.ustc.edu.cn/"
-        self.max_num = 438  # 总页数+1
+        self.max_num = max_num  # 总页数+1（第二页+2）
 
-    def _nextpage(self, i): # ! 注意这里的i的变化
+    def _nextpage(self, i):  # ! 注意这里的i的变化
         if i == 1:
-            return "http://news.ustc.edu.cn/mtgz.htm"
+            url = "http://news.ustc.edu.cn/mtgz.htm"
         else:
-            return f"http://news.ustc.edu.cn/mtgz/{self.max_num-i}.htm"
+            url = f"http://news.ustc.edu.cn/mtgz/{self.max_num-i}.htm"
+        return url
 
     def _time_parser(self, news_time):
         news_time = news_time.strip()
@@ -79,8 +80,8 @@ class USTC(NewsInfo):
                 month = int(news_data['time'][5:7])
                 if year not in order_years or month < min(order_months):
                     return data
-                # elif month > max(order_months):
-                #     continue
+                elif month > max(order_months):
+                    continue
 
                 self.print_info(news_data)
                 data.append(news_data)

@@ -3,12 +3,12 @@ Author: Derry
 Date: 2022-06-08 13:07:16
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-05-29 20:03:54
+LastEditTime: 2023-07-03 15:14:49
 Description: 复旦大学新闻网爬虫
 '''
 from university.NewsInfo import NewsInfo
 from university.utils import request_url
-
+import re
 
 class Fudan(NewsInfo):
     def __init__(self) -> None:
@@ -25,6 +25,16 @@ class Fudan(NewsInfo):
         month = news_time[10:12]
         day = news_time[13:15]
         return year+'-'+month+'-'+day
+    
+    def _media_parser(self, media):
+        media = media.strip()
+        if '《' in media and '》' in media:
+            pattern = r'《(.*?)》'
+            media = re.findall(pattern, media)[0]
+            return media
+        elif ' ' in media:
+            media =  media.split(' ')[0]
+        return media
 
     def get_news(self, order_years=[2022], order_months=[3, 4, 5, 6]):
         self.outfile_name = self._get_out_name(self.univ_name, order_years[0], order_months)
@@ -48,6 +58,8 @@ class Fudan(NewsInfo):
                         'h1', class_='arti_title')[0].text
                     news_data['media'] = news_soup.find_all(
                         'span', class_='none1')[0].text
+                    news_data['media'] = self._media_parser(news_data['media'])
+                    
 
                     year = int(news_data['time'][:4])
                     month = int(news_data['time'][5:7])

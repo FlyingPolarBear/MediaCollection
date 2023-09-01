@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-05-26 21:38:58
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-06-02 13:48:26
+LastEditTime: 2023-08-01 11:53:24
 Description: 主函数
 '''
 import datetime
@@ -59,4 +59,4 @@ def main(order_months=None):
 
 
 if __name__ == "__main__":
-    main([5])
+    main([8])
