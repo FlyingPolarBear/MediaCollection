@@ -9,7 +9,7 @@ Description: 南京大学新闻网爬虫
 from university.utils import post_data
 from university.NewsInfo import NewsInfo
 from university.utils import request_url
-
+from rich import print as rprint
 
 class NJU(NewsInfo):
     def __init__(self) -> None:
@@ -71,7 +71,7 @@ class NJU(NewsInfo):
             media = info.split("|")[0]
             time_ = info.split("|")[1].split(" ")[0].strip()
         else:
-            raise Exception("info is None")
+            return False
         title = detail_soup.find(
             'h1', attrs={"id": "js-title", "class": "js-title"})
         if title is not None:
@@ -113,6 +113,9 @@ class NJU(NewsInfo):
                     # 正常链接
                     news_url = self.info_base_url + news_url
                     news_data = self._detail_parser(news_url)
+                if news_data is False:
+                    rprint(f"abnormal news: {news_url}")
+                    continue
                 if news_data['title'] not in title_list:
                     self.print_info(news_data)
                     data.append(news_data)

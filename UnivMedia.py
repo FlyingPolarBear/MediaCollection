@@ -3,7 +3,7 @@ Author: Derry
 Date: 2022-05-26 21:38:58
 LastEditors: Derry
 Email: drlv@mail.ustc.edu.cn
-LastEditTime: 2023-08-01 11:53:24
+LastEditTime: 2023-12-01 14:05:15
 Description: 主函数
 '''
 import datetime
@@ -38,7 +38,6 @@ def timed_trigger_main():
 
 def main(order_months=None):
     """
-    ! Attention: 南京大学每月需要更新infoids
     ! Attention: 中国科大需要注意max_page的变更
     ? Caution: 天津大学需要注意max_page的变更
     """
@@ -59,4 +58,4 @@ def main(order_months=None):
 
 
 if __name__ == "__main__":
-    main([8])
+    main([11])
